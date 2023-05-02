@@ -18,26 +18,30 @@ export class TodosController {
 
     @Get(':id')
     async findById(@Param('id') id: number): Promise<Todo> {
-        return await this.todosService.findById(id);
-    }
+        try {
+          const todo = await this.todosService.findById(id);
+          if (!todo) {
+            throw new Error(`Todo with id "${id}" not found`);
+          }
+          return todo;
+        } catch (error) {
+          throw new Error(`Unable to find todo with id "${id}": ${error.message}`);
+        }
+      }
     
-    // @Patch(':id')
-    // async updateById(@Param('id') id: string, @Body() updateTodoDto: createTodoDto): Promise<Todo> {
-    //     return await this.todosService.updateById(id, updateTodoDto);
-    // }
+    @Patch(':id')
+    async updateById(@Param('id') id: string, @Body() updateTodoDto: createTodoDto): Promise<Todo> {
+        return await this.todosService.updateById(id, updateTodoDto);
+    }
 
-    // @Delete(':id')
-    // async deleteById(@Param('id') id: string): Promise<void> {
-    //     return await this.todosService.deleteById(id);
-    // }
+    @Delete(':id')
+    async deleteById(@Param('id') id: string): Promise<void> {
+        return await this.todosService.deleteById(id);
+    }
 
-    // @Delete()
-    // async deleteAll(): Promise<void> {
-    //     return await this.todosService.deleteAll();
-    // }
-//     @Get(':id')
-// async getTodoById(@Param() params: any): Promise<Todo> {
-//     console.log(params.id);
-//   return await this.todosService.findById(params.id);
-// }
+    @Delete()
+    async deleteAll(): Promise<void> {
+        return await this.todosService.deleteAll();
+    }
+
 }
